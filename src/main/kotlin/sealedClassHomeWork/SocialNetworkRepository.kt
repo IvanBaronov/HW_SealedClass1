@@ -6,16 +6,13 @@ class SocialNetworkRepository {
     fun findUserById(id: Int) : ResultResponse {
         lateinit var user: User
         for (userInList in NetworkDummy.getAllUsers()) {
-            if (userInList.id == id) user = userInList
+            if (userInList.id == id) {
+                user = userInList
+                return ResultResponse.Success(user)
+            }
         }
-
-        if (user == null) {
-            return ResultResponse.Failure(NullPointerException())
-        } else {
-            return ResultResponse.Success(user)
-        }
+        return ResultResponse.Failure(NullPointerException())
     }
-
 
     //получение списка постов, опубликованных пользователем.
     fun findUserPosts(userId: Int) : ResultResponse {

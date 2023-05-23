@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     println("Введите число пользователей сети:")
     val usersCount = readln().toInt()
     val users = NetworkDummy.generateUsers(usersCount)
-    println("Сгенерировано пользователей: ${users.size}")
+    println("Сгенерировано пользователей: ${users.size} \n $users")
 //    val friendships = NetworkDummy.generateFriendships(users)
     TODO@
 ///// !!!!!!!!!!!  разобраться почему метод generateFriendships приводит к зависанию программы!!!
