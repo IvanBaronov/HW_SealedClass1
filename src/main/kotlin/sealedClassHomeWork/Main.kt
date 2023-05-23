@@ -17,19 +17,17 @@ fun main() {
     println("Введите число пользователей сети:")
     val usersCount = readln().toInt()
     users = NetworkDummy.generateUsers(usersCount)
-    println("Сгенерировано пользователей: ${users.size} \n $users")
+
     //val friendships = NetworkDummy.generateFriendships(users)
     //метод generateFriendships приводит к зависанию программы!!!
 
     println("Введите число постов пользователей:")
     val postsCount = readln().toInt()
     posts = NetworkDummy.generatePosts(postsCount)
-    println("Сгенерировано постов: ${posts.size}")
 
     println("Введите число комментариев к постам:")
     val commentsCount = readln().toInt()
     comments = NetworkDummy.generateComments(commentsCount)
-    println("Сгенерировано комментариев: ${comments.size}")
 
     while (true) {
 
