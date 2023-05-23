@@ -3,9 +3,9 @@ package sealedClassHomeWork
 class SocialNetworkRepository {
 
     //получение пользователя по его идентификатору
-    fun findUserById(id: Int) : ResultResponse {
+    fun findUserById(id: Int): ResultResponse {
         lateinit var user: User
-        for (userInList in NetworkDummy.getAllUsers()) {
+        for (userInList in users) {
             if (userInList.id == id) {
                 user = userInList
                 return ResultResponse.Success(user)
@@ -15,9 +15,9 @@ class SocialNetworkRepository {
     }
 
     //получение списка постов, опубликованных пользователем.
-    fun findUserPosts(userId: Int) : ResultResponse {
+    fun findUserPosts(userId: Int): ResultResponse {
         val userPostsList = mutableListOf<Post>()
-        for (post in NetworkDummy.getAllPosts()) {
+        for (post in posts) {
             if (post.author.id == userId) userPostsList.add(post)
         }
 
@@ -30,16 +30,16 @@ class SocialNetworkRepository {
 
 
     //создание нового поста пользователя по id Пользователя
-    fun createNewPost(userId: Int, content: String) : Post? {
+    fun createNewPost(userId: Int, content: String): Post? {
         val responseUser: ResultResponse = repository.findUserById(userId)
         when (responseUser) {
             is ResultResponse.Failure -> {
-                println("User not found")
+                println("Пользователь не найден")
                 return null
             }
             is ResultResponse.Success -> {
                 val postAuthor: User = responseUser.data as User
-                val postId = NetworkDummy.getAllPosts().size //id поста определяется по кол-ву имеющихся постов
+                val postId = posts.size //id поста определяется по кол-ву имеющихся постов
                 val post = Post(postId, postAuthor, content)
                 NetworkDummy.addNewPost(post)
                 return Post(postId, postAuthor, content)
@@ -47,9 +47,10 @@ class SocialNetworkRepository {
         }
     }
 
+
     //получение списка комментариев к посту.
-    fun findPostComments (postId: Int) : ResultResponse {
-        val commentsList = NetworkDummy.getAllComments().filter { it.post.id == postId}.toMutableList()
+    fun findPostComments(postId: Int): ResultResponse {
+        val commentsList = comments.filter { it.post.id == postId }.toMutableList()
 
         if (commentsList.isEmpty()) {
             return ResultResponse.Failure(NullPointerException())
@@ -59,9 +60,9 @@ class SocialNetworkRepository {
     }
 
 
-    //поиск пользователя по имени
-    //// возвращает список, т.к. пользователей с одним и тем же именем м.б. много
-    fun findUsersByName(name: String) : ResultResponse {
+    //поиск пользователей по имени
+    // возвращает список, т.к. пользователей с одним и тем же именем м.б. много
+    fun findUsersByName(name: String): ResultResponse {
         val userList = mutableListOf<User>()
         for (user in NetworkDummy.getAllUsers()) if (user.name == name) userList.add(user)
 

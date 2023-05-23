@@ -7,8 +7,7 @@ object NetworkDummy {
     private val users: MutableList<User>
     private val posts: MutableList<Post>
     private val comments: MutableList<Comment>
-    private val friendships: MutableList<Friendship>
-    ///// заменил все списки с List на MutableList, чтобы их можно было менять
+    //private val friendships: MutableList<Friendship>
 
     init {
         // Заполнение тестовых данных для пользователей
@@ -21,7 +20,7 @@ object NetworkDummy {
         comments = generateComments(10000)
 
         // Заполнение тестовых данных для друзей
-        friendships = generateFriendships(users)
+        //friendships = generateFriendships(users)
     }
 
     fun getAllUsers(): MutableList<User> {
@@ -37,20 +36,19 @@ object NetworkDummy {
     fun addNewPost(post: Post) {
         posts.add(post)
     }
-    ////////  добавил метод, позволяющий добавлять новые посты  в общий список, чтобы они не пропадали
-    ///////   а также, чтобы генерировать id у новых постов в порядке их создания
+    /*  добавил метод, позволяющий добавлять новые посты  в общий список, чтобы они не пропадали
+    а также, чтобы генерировать id у новых постов в порядке их создания */
 
     fun getAllComments(): MutableList<Comment> {
         // Возвращение всех комментариев
         return comments
     }
 
-    fun getFriendshipsForUser(user: User): MutableList<User> {
-        // Возвращение списка друзей для указанного пользователя
-        val friendshipIds = friendships.filter { it.userId == user.id }.map { it.friendId }
-        return users.filter { it.id in friendshipIds }.toMutableList()
-        ///////  добавил .toMutableList() в конце пред. строки
-    }
+//    fun getFriendshipsForUser(user: User): MutableList<User> {
+//        // Возвращение списка друзей для указанного пользователя
+//        val friendshipIds = friendships.filter { it.userId == user.id }.map { it.friendId }
+//        return users.filter { it.id in friendshipIds }.toMutableList()
+//    }
 
     fun generateUsers(count: Int): MutableList<User> {
         val userList = mutableListOf<User>()
@@ -91,22 +89,22 @@ object NetworkDummy {
         return commentList
     }
 
-    fun generateFriendships(users: List<User>): MutableList<Friendship> {
-        val friendshipList = mutableListOf<Friendship>()
-        val random = Random()
-        for (user in users) {
-            val friendCount = random.nextInt(10) + 1 // Случайное количество друзей от 1 до 10
-            val friendIds = mutableListOf<Int>()
-            while (friendIds.size < friendCount) {
-                val friendId = random.nextInt(users.size) + 1
-                if (friendId != user.id && friendId !in friendIds) {
-                    friendIds.add(friendId)
-                }
-            }
-            val friendships = friendIds.map { Friendship(user.id, it) }
-            friendshipList.addAll(friendships)
-        }
-        return friendshipList
-    }
+//    fun generateFriendships(users: List<User>): MutableList<Friendship> {
+//        val friendshipList = mutableListOf<Friendship>()
+//        val random = Random()
+//        for (user in users) {
+//            val friendCount = random.nextInt(10) + 1 // Случайное количество друзей от 1 до 10
+//            val friendIds = mutableListOf<Int>()
+//            while (friendIds.size < friendCount) {
+//                val friendId = random.nextInt(users.size) + 1
+//                if (friendId != user.id && friendId !in friendIds) {
+//                    friendIds.add(friendId)
+//                }
+//            }
+//            val friendships = friendIds.map { Friendship(user.id, it) }
+//            friendshipList.addAll(friendships)
+//        }
+//        return friendshipList
+//    }
 
 }

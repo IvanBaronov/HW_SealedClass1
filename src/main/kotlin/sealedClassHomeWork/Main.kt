@@ -3,8 +3,11 @@ package sealedClassHomeWork
 
 //объявление переменной repository вынесено за пределы метода main, чтобы был доступ к репо из класса SocialNetworkRepository
 lateinit var repository: SocialNetworkRepository
+lateinit var users: MutableList<User>
+lateinit var posts: MutableList<Post>
+lateinit var comments: MutableList<Comment>
 
-fun main(args: Array<String>) {
+fun main() {
 
     //Создание репозитория сети
     repository = SocialNetworkRepository()
@@ -13,20 +16,19 @@ fun main(args: Array<String>) {
 
     println("Введите число пользователей сети:")
     val usersCount = readln().toInt()
-    val users = NetworkDummy.generateUsers(usersCount)
+    users = NetworkDummy.generateUsers(usersCount)
     println("Сгенерировано пользователей: ${users.size} \n $users")
-//    val friendships = NetworkDummy.generateFriendships(users)
-    TODO@
-///// !!!!!!!!!!!  разобраться почему метод generateFriendships приводит к зависанию программы!!!
+    //val friendships = NetworkDummy.generateFriendships(users)
+    //метод generateFriendships приводит к зависанию программы!!!
 
     println("Введите число постов пользователей:")
     val postsCount = readln().toInt()
-    val posts = NetworkDummy.generatePosts(postsCount)
+    posts = NetworkDummy.generatePosts(postsCount)
     println("Сгенерировано постов: ${posts.size}")
 
     println("Введите число комментариев к постам:")
     val commentsCount = readln().toInt()
-    val comments = NetworkDummy.generateComments(commentsCount)
+    comments = NetworkDummy.generateComments(commentsCount)
     println("Сгенерировано комментариев: ${comments.size}")
 
     while (true) {
@@ -116,13 +118,3 @@ fun main(args: Array<String>) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
