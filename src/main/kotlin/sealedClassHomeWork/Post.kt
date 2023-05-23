@@ -1,6 +1,6 @@
 package sealedClassHomeWork
 
-class Post(id: Int, author: User, content: String) {
+data class Post(val id: Int, val author: User, val content: String) {
 
 //    constructor(id: Int, author: User, content: String) {
 //        this.id = id
@@ -8,21 +8,11 @@ class Post(id: Int, author: User, content: String) {
 //        this.content = content
 //    }
 
-    private var id = 0
-    private lateinit var author: User
-    private lateinit var content: String
+//    private var id = 0
+//    private lateinit var author: User
+//    private lateinit var content: String
 
-    fun getId () : Int {
-        return this.id
-    }
 
-    fun getAuthor () : User {
-        return this.author
-    }
-
-    fun getContent () : String {
-        return this.content
-    }
 
 
 }

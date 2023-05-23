@@ -1,5 +1,7 @@
 package sealedClassHomeWork
 
+import kotlin.properties.Delegates
+
 class SocialNetworkRepository {
 
     //получение пользователя по его идентификатору
@@ -21,7 +23,7 @@ class SocialNetworkRepository {
     fun getUserPosts(user: User) : ResultResponse {
         val userPostsList = mutableListOf<Post>()
         for (post in NetworkDummy.getAllPosts()) {
-            if (post.getAuthor() == user) userPostsList.add(post)
+            if (post.author == user) userPostsList.add(post)
         }
 
         if (userPostsList.isEmpty()) {
@@ -44,7 +46,7 @@ class SocialNetworkRepository {
 
     //получение списка комментариев к посту.
     fun getPostComments (post: Post) : ResultResponse {
-        val commentsList = NetworkDummy.getAllComments().filter { it.getPost() == post}.toMutableList()
+        val commentsList = NetworkDummy.getAllComments().filter { it.post == post}.toMutableList()
 
         if (commentsList.isEmpty()) {
             return ResultResponse.Failure(NullPointerException())
@@ -58,7 +60,7 @@ class SocialNetworkRepository {
     //// возвращает список, т.к. пользователей с одним и тем же именем м.б. много
     fun findUsersByName(name: String) : ResultResponse {
         val userList = mutableListOf<User>()
-        for (user in NetworkDummy.getAllUsers()) if (user.getName() == name) userList.add(user)
+        for (user in NetworkDummy.getAllUsers()) if (user.name == name) userList.add(user)
 
         if (userList.isEmpty()) {
             return ResultResponse.Failure(NullPointerException())

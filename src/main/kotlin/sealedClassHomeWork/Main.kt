@@ -1,19 +1,21 @@
 package sealedClassHomeWork
 
-
+enum class Answer(val data: String) {
+    YES("да"),
+    NO("нет")
+}
 
 fun main(args: Array<String>) {
 
     //Создание репозитория сети
     val repository = SocialNetworkRepository()
 
-
     //генерация контента
 
     println("Введите число пользователей сети:")
     val usersCount = readln().toInt()
     val users = NetworkDummy.generateUsers(usersCount)
-    val friendships = NetworkDummy.generateFriendships(users)
+//    val friendships = NetworkDummy.generateFriendships(users)
 
     println("Введите число постов пользователей:")
     val postsCount = readln().toInt()
@@ -24,10 +26,12 @@ fun main(args: Array<String>) {
     val comments = NetworkDummy.generateComments(commentsCount)
 
 
-    println("""Введите номер команды:
+    println(
+        """Введите номер команды:
         |1. Найти пользователя по id
         |2. createNewPost
-        |3. findUsersByName""".trimMargin())
+        |3. findUsersByName""".trimMargin()
+    )
 
     val command = readln().toInt()
 
@@ -36,54 +40,52 @@ fun main(args: Array<String>) {
         1 -> {
             println("Введите id пользователя:")
             val userId = readln().toInt()
-            val response = repository.findUserById(userId)
-            when (response) {
+            val responseUser: ResultResponse = repository.findUserById(userId)
+            when (responseUser) {
                 is ResultResponse.Failure -> println("error found")
                 is ResultResponse.Success -> {
-                    println("user found\n ${ResultResponse.Success}.........")
-                    //как вытащить пользователя из возвращ значения?
-                    val user: User
+                    val user: User = (responseUser).data as User
+                    println("user found\n $user")
                     println("Показать посты пользователя (да/нет)?")
                     val showPosts = readln()
-                    if (showPosts == "да") {
-                        val userId = user.id
-                        val response = repository.getUserPosts(userId)
-                        when (response) {
+                    if (showPosts == Answer.YES.data) {
+                        val responsePost = repository.getUserPosts(user)
+                        when (responsePost) {
                             is ResultResponse.Failure -> println("error found")
                             is ResultResponse.Success -> {
                                 println("posts found\n .........")
                                 //как извлечь пост из возвр значения?
-                                val post: Post
-                                println("Показать комментарии к посту (да/нет)?")
+                                val posts = (responsePost.data as? MutableList<Post>) ?: mutableListOf()
+                                println("Показать комментарии к первому посту (да/нет)?")
                                 val showComments = readln()
-                                if (showComments == "да") {
+                                if (showComments == Answer.YES.data) {
                                     val userId = user.id
-                                    val response = repository.getPostComments(post)
-                                    when (response) {
+                                    val responseComment = repository.getPostComments(posts[0])
+                                    when (responseComment) {
                                         is ResultResponse.Failure -> println("error found")
                                         is ResultResponse.Success -> {
                                             println("posts found\n .........")
+                                        }
+                                    }
                                 }
                             }
-                            //как убрать else?
-                            else -> {}
                         }
                     }
                 }
-                else -> {}  //как убрать else?
+
+//                2 -> {
+//                    println("Введите id пользователя:")
+//                    val userId = readln().toInt()
+//
+//                }
+
+
             }
-        }
 
-        2 -> {
-            println("Введите id пользователя:")
-            val userId = readln().toInt()
 
         }
-
 
     }
-
-
 }
 
 
