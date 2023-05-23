@@ -1,91 +1,128 @@
 package sealedClassHomeWork
 
-enum class Answer(val data: String) {
-    YES("да"),
-    NO("нет")
-}
+
+//объявление переменной repository вынесено за пределы метода main, чтобы был доступ к репо из класса SocialNetworkRepository
+lateinit var repository: SocialNetworkRepository
 
 fun main(args: Array<String>) {
 
     //Создание репозитория сети
-    val repository = SocialNetworkRepository()
+    repository = SocialNetworkRepository()
 
     //генерация контента
 
     println("Введите число пользователей сети:")
     val usersCount = readln().toInt()
     val users = NetworkDummy.generateUsers(usersCount)
+    println("Сгенерировано пользователей: ${users.size}")
 //    val friendships = NetworkDummy.generateFriendships(users)
+    TODO@
+///// !!!!!!!!!!!  разобраться почему метод generateFriendships приводит к зависанию программы!!!
 
     println("Введите число постов пользователей:")
     val postsCount = readln().toInt()
     val posts = NetworkDummy.generatePosts(postsCount)
+    println("Сгенерировано постов: ${posts.size}")
 
     println("Введите число комментариев к постам:")
     val commentsCount = readln().toInt()
     val comments = NetworkDummy.generateComments(commentsCount)
+    println("Сгенерировано комментариев: ${comments.size}")
 
+    while (true) {
 
-    println(
-        """Введите номер команды:
+        println(
+            """
+        |Введите номер команды:
         |1. Найти пользователя по id
-        |2. createNewPost
-        |3. findUsersByName""".trimMargin()
-    )
+        |2. Найти пользователей по имени
+        |3. Найти посты пользователя по его id 
+        |4. Найти комментарии к посту по id поста
+        |5. Создать новый пост заданного пользователя
+        |6. Выход""".trimMargin()
+        )
 
-    val command = readln().toInt()
+        val command = readln().toInt()
 
 
-    when (command) {
-        1 -> {
-            println("Введите id пользователя:")
-            val userId = readln().toInt()
-            val responseUser: ResultResponse = repository.findUserById(userId)
-            when (responseUser) {
-                is ResultResponse.Failure -> println("error found")
-                is ResultResponse.Success -> {
-                    val user: User = (responseUser).data as User
-                    println("user found\n $user")
-                    println("Показать посты пользователя (да/нет)?")
-                    val showPosts = readln()
-                    if (showPosts == Answer.YES.data) {
-                        val responsePost = repository.getUserPosts(user)
-                        when (responsePost) {
-                            is ResultResponse.Failure -> println("error found")
-                            is ResultResponse.Success -> {
-                                println("posts found\n .........")
-                                //как извлечь пост из возвр значения?
-                                val posts = (responsePost.data as? MutableList<Post>) ?: mutableListOf()
-                                println("Показать комментарии к первому посту (да/нет)?")
-                                val showComments = readln()
-                                if (showComments == Answer.YES.data) {
-                                    val userId = user.id
-                                    val responseComment = repository.getPostComments(posts[0])
-                                    when (responseComment) {
-                                        is ResultResponse.Failure -> println("error found")
-                                        is ResultResponse.Success -> {
-                                            println("posts found\n .........")
-                                        }
-                                    }
-                                }
-                            }
-                        }
+        when (command) {
+            1 -> {
+                println("Введите id пользователя:")
+                val userId = readln().toInt()
+                val responseUser: ResultResponse = repository.findUserById(userId)
+                when (responseUser) {
+                    is ResultResponse.Failure -> println("Пользователь не найден")
+                    is ResultResponse.Success -> {
+                        val user: User = (responseUser).data as User
+                        println("Найден пользователь:\n $user")
                     }
                 }
-
-//                2 -> {
-//                    println("Введите id пользователя:")
-//                    val userId = readln().toInt()
-//
-//                }
-
-
             }
 
+            2 -> {
+                println("Введите имя:")
+                val requestName = readln()
+                val responseUsers = repository.findUsersByName(requestName)
+                when (responseUsers) {
+                    is ResultResponse.Failure -> println("Пользователи с таким именем не найдены")
+                    is ResultResponse.Success -> {
+                        val users: MutableList<User> = responseUsers.data as MutableList<User>
+                        println("Найдены следующие пользователи:\n$users")
+                    }
+                }
+            }
+
+            3 -> {
+                println("Введите id пользователя:")
+                val userId = readln().toInt()
+                val responsePosts: ResultResponse = repository.findUserPosts(userId)
+                when (responsePosts) {
+                    is ResultResponse.Failure -> println("Посты не найдены")
+                    is ResultResponse.Success -> {
+                        val posts = (responsePosts.data as? MutableList<Post>) ?: mutableListOf()
+                        println("Гайдены следующие посты:\n $posts")
+                    }
+                }
+            }
+
+            4 -> {
+                println("Введите id поста:")
+                val commentId = readln().toInt()
+                val responseComment = repository.findPostComments(commentId)
+                when (responseComment) {
+                    is ResultResponse.Failure -> println("Комментарии не найдены")
+                    is ResultResponse.Success -> {
+                        val comments = (responseComment.data as? MutableList<Post>) ?: mutableListOf()
+                        println("Найдены следующие комментарии:\n $comments")
+                    }
+                }
+            }
+
+            5 -> {
+                println("Введите id пользователя:")
+                val userId = readln().toInt()
+                println("Введите содержимое поста:")
+                val postContent = readln()
+                val newPost = repository.createNewPost(userId, postContent)
+                if (newPost != null) {
+                    println("Пост добавлен. Id поста: ${newPost.id}")
+                }
+            }
+
+            6 -> return
+
+            else -> println("Неверно введен номер команды")
 
         }
-
     }
 }
+
+
+
+
+
+
+
+
 
 

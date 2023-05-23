@@ -1,7 +1,5 @@
 package sealedClassHomeWork
 
-import kotlin.properties.Delegates
-
 class SocialNetworkRepository {
 
     //получение пользователя по его идентификатору
@@ -20,10 +18,10 @@ class SocialNetworkRepository {
 
 
     //получение списка постов, опубликованных пользователем.
-    fun getUserPosts(user: User) : ResultResponse {
+    fun findUserPosts(userId: Int) : ResultResponse {
         val userPostsList = mutableListOf<Post>()
         for (post in NetworkDummy.getAllPosts()) {
-            if (post.author == user) userPostsList.add(post)
+            if (post.author.id == userId) userPostsList.add(post)
         }
 
         if (userPostsList.isEmpty()) {
@@ -34,19 +32,27 @@ class SocialNetworkRepository {
     }
 
 
-    //создание нового поста пользователем
-    fun createNewPost(user: User, content: String) : Post {
-        val id = NetworkDummy.getAllPosts().size
-        val author = user
-        val content = content
-        val post = Post(id, author, content)
-        NetworkDummy.addNewPost(post)
-        return Post(id, author, content)
+    //создание нового поста пользователя по id Пользователя
+    fun createNewPost(userId: Int, content: String) : Post? {
+        val responseUser: ResultResponse = repository.findUserById(userId)
+        when (responseUser) {
+            is ResultResponse.Failure -> {
+                println("User not found")
+                return null
+            }
+            is ResultResponse.Success -> {
+                val postAuthor: User = responseUser.data as User
+                val postId = NetworkDummy.getAllPosts().size //id поста определяется по кол-ву имеющихся постов
+                val post = Post(postId, postAuthor, content)
+                NetworkDummy.addNewPost(post)
+                return Post(postId, postAuthor, content)
+            }
+        }
     }
 
     //получение списка комментариев к посту.
-    fun getPostComments (post: Post) : ResultResponse {
-        val commentsList = NetworkDummy.getAllComments().filter { it.post == post}.toMutableList()
+    fun findPostComments (postId: Int) : ResultResponse {
+        val commentsList = NetworkDummy.getAllComments().filter { it.post.id == postId}.toMutableList()
 
         if (commentsList.isEmpty()) {
             return ResultResponse.Failure(NullPointerException())
