@@ -69,7 +69,7 @@ object NetworkDummy {
             val id = i
             val author = users[random.nextInt(users.size)]
             val content = "Post $i content"
-            val post = Post(id, author, content)
+            val post = Post(id, author.id, content)
             postList.add(post)
         }
         return postList

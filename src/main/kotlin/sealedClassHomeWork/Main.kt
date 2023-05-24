@@ -49,7 +49,7 @@ fun main() {
             1 -> {
                 println("Введите id пользователя:")
                 val userId = readln().toInt()
-                val responseUser: ResultResponse = repository.findUserById(userId)
+                val responseUser: ResultResponse = repository.findUserById(userId, users)
                 when (responseUser) {
                     is ResultResponse.Failure -> println("Пользователь не найден")
                     is ResultResponse.Success -> {
@@ -62,7 +62,7 @@ fun main() {
             2 -> {
                 println("Введите имя:")
                 val requestName = readln()
-                val responseUsers = repository.findUsersByName(requestName)
+                val responseUsers = repository.findUsersByName(requestName, users)
                 when (responseUsers) {
                     is ResultResponse.Failure -> println("Пользователи с таким именем не найдены")
                     is ResultResponse.Success -> {
@@ -75,7 +75,7 @@ fun main() {
             3 -> {
                 println("Введите id пользователя:")
                 val userId = readln().toInt()
-                val responsePosts: ResultResponse = repository.findUserPosts(userId)
+                val responsePosts: ResultResponse = repository.findUserPosts(userId, posts)
                 when (responsePosts) {
                     is ResultResponse.Failure -> println("Посты не найдены")
                     is ResultResponse.Success -> {
@@ -88,7 +88,7 @@ fun main() {
             4 -> {
                 println("Введите id поста:")
                 val commentId = readln().toInt()
-                val responseComment = repository.findPostComments(commentId)
+                val responseComment = repository.findPostComments(commentId, comments)
                 when (responseComment) {
                     is ResultResponse.Failure -> println("Комментарии не найдены")
                     is ResultResponse.Success -> {
@@ -103,9 +103,9 @@ fun main() {
                 val userId = readln().toInt()
                 println("Введите содержимое поста:")
                 val postContent = readln()
-                val newPost = repository.createNewPost(userId, postContent)
-                if (newPost != null) {
-                    println("Пост добавлен. Id поста: ${newPost.id}")
+                val newPostId = repository.createNewPost(userId, postContent)
+                if (newPostId != null) {
+                    println("Пост добавлен. Id поста: $newPostId")
                 }
             }
 
